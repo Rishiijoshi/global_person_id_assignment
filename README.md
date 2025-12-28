@@ -32,5 +32,18 @@ Person records are stored in `person_store.json`:
 - sightings count
 
 ## How to Run
-```bash
+```bash```
 python main.py
+
+## Fix dataset paths and execution order; validated on Kaggle
+## Tested Environment
+
+This module was tested on Kaggle using:
+- OA18 Front View dataset
+- OA18 Side View dataset
+
+Dataset paths are configured as:
+- /kaggle/input/oa18-front-view
+- /kaggle/input/oa18-side-view
+
+For local usage, update ROOT_DIRS in main.py accordingly.
