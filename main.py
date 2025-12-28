@@ -1,4 +1,4 @@
-# main.py
+%%writefile main.py
 import os
 from datetime import datetime, timedelta
 import pandas as pd
@@ -6,6 +6,11 @@ from id_manager import GlobalIDManager
 
 FPS = 30
 ZONE = "Office_Zone"
+
+ROOT_DIRS = [
+    "/kaggle/input/oa18-front-view",
+    "/kaggle/input/oa18-side-view"
+]
 
 def frame_to_timestamp(frame):
     return (datetime.utcnow() + timedelta(seconds=frame / FPS)).isoformat()
@@ -33,7 +38,13 @@ def generate_detections(root):
             if file.lower() in ["class_index.txt", "readme.txt"]:
                 continue
 
-            camera_id = "CAM_01" if file.startswith("f_") else "CAM_02"
+            if file.startswith("f_"):
+                camera_id = "CAM_01"
+            elif file.startswith("s_"):
+                camera_id = "CAM_02"
+            else:
+                continue
+
             path = os.path.join(r, file)
 
             with open(path) as f:
@@ -51,8 +62,11 @@ def generate_detections(root):
     return detections
 
 if __name__ == "__main__":
-    ROOT_DIR = "./data"  # change as needed
-    detections = generate_detections(ROOT_DIR)
+    detections = []
+    for root in ROOT_DIRS:
+        detections.extend(generate_detections(root))
+
+    print(f"Total detections generated: {len(detections)}")
 
     manager = GlobalIDManager()
     output = manager.process_detections(detections)
